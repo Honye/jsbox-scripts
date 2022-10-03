@@ -1,0 +1,25 @@
+{
+  "widget" : {
+    "staticSize" : false,
+    "tintColor" : "",
+    "height" : 0,
+    "iconColor" : ""
+  },
+  "info" : {
+    "types" : 3,
+    "author" : "",
+    "website" : "",
+    "name" : "",
+    "url" : "",
+    "version" : "1.0.0"
+  },
+  "settings" : {
+    "autoKeyboardEnabled" : false,
+    "minOSVer" : "14.0.0",
+    "idleTimerDisabled" : false,
+    "rotateDisabled" : false,
+    "theme" : "auto",
+    "keyboardToolbarEnabled" : false,
+    "minSDKVer" : "2.12.0"
+  }
+}
