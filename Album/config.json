@@ -1,0 +1,25 @@
+{
+  "widget" : {
+    "staticSize" : false,
+    "tintColor" : "",
+    "height" : 0,
+    "iconColor" : ""
+  },
+  "info" : {
+    "types" : 1,
+    "author" : "Jun",
+    "website" : "https:\/\/www.imarkr.com",
+    "name" : "Album",
+    "url" : "https:\/\/github.com\/Honye\/jsbox-scripts\/blob\/main\/Album\/.output\/Album.box",
+    "version" : "1.1.0"
+  },
+  "settings" : {
+    "autoKeyboardEnabled" : false,
+    "minOSVer" : "13.0.0",
+    "idleTimerDisabled" : false,
+    "rotateDisabled" : false,
+    "theme" : "auto",
+    "keyboardToolbarEnabled" : false,
+    "minSDKVer" : "2.0.0"
+  }
+}
