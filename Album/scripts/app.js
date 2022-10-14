@@ -1,3 +1,4 @@
+const { readAlbums, mapAlbumsData } = require('./common')
 const { AlbumTemplate } = require('./template');
 const { Photos } = require('./photos');
 
@@ -46,14 +47,19 @@ const removeWidgetOption = (value) => {
   })
 }
 
-/**
- * @param {{ name: string; photos: string[] }[]} albums 
- */
-exports.init = (albums) => {
+exports.init = () => {
+  const { query } = $context
+  const albums = readAlbums()
   const { screen } = $device.info;
   const columns = 2;
   const spacing = 0;
   const itemWidth = (screen.width - 20 - spacing * (columns + 1)) / columns;
+
+  const { album, filename } = query;
+  if (album) {
+    $ui.render(Photos({ album, filename }))
+    return
+  }
 
   const createAlbumHandler = () => {
     $input.text({
@@ -121,11 +127,7 @@ exports.init = (albums) => {
           spacing,
           itemHeight: itemWidth + 20 + 20,
           template: AlbumTemplate({ width: itemWidth }),
-          data: albums.map((item) => ({
-            image: { src: item.photos[0] },
-            name: { text: item.name },
-            count: { text: `${item.photos.length}` },
-          })),
+          data: mapAlbumsData(albums),
           menu: {
             items: [
               {
@@ -158,12 +160,13 @@ exports.init = (albums) => {
         events: {
           didSelect: (sender, indexPath) => {
             $ui.push(
-              Photos(albums[indexPath.row])
+              Photos({
+                album: albums[indexPath.row].name,
+              })
             );
           },
         },
       },
     ],
   });
-
 };

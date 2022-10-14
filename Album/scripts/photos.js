@@ -1,3 +1,5 @@
+const { albumsPath, readAlbums, mapAlbumsData, readPhotos } = require('./common')
+
 const { screen } = $device.info;
 const columns = 3;
 const spacing = 4;
@@ -26,6 +28,7 @@ const choosePhotos = ({ album }) => {
             },
           },
         });
+        $('albums').data = mapAlbumsData(readAlbums())
       }
     },
   });
@@ -33,19 +36,20 @@ const choosePhotos = ({ album }) => {
 
 /**
  * @param {object} params
- * @param {string[]} params.photos
+ * @param {string} params.album 相册名
+ * @param {string} [params.filename] 图片文件名
  */
-exports.Photos = ({ name, photos }) => {
+exports.Photos = ({ album, filename }) => {
+  const photos = readPhotos(album)
+
   return {
     props: {
-      title: name,
+      title: album,
       navButtons: [
         {
           symbol: 'camera.on.rectangle',
           handler: (sender) => {
-            choosePhotos({
-              album: name,
-            });
+            choosePhotos({ album });
           },
         },
       ],
@@ -87,6 +91,7 @@ exports.Photos = ({ name, photos }) => {
                 handler: (sender, indexPath) => {
                   $file.delete(photos[indexPath.row]);
                   $('matrix').delete(indexPath);
+                  $('albums').data = mapAlbumsData(readAlbums())
                 },
               },
             ],
@@ -96,6 +101,12 @@ exports.Photos = ({ name, photos }) => {
           make.top.left.bottom.right.equalTo(0);
         },
         events: {
+          ready() {
+            if (filename) {
+              const image = $image(`${albumsPath}${album}/${filename}`);
+              $quicklook.open({ image });
+            }
+          },
           didSelect: (sender, indexPath) => {
             const image = $image(
               photos[indexPath.row]

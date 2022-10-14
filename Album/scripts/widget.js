@@ -22,13 +22,21 @@ exports.render = (photos) => {
     return
   }
   
+  const date = new Date()
+  const afterDate = new Date(date.getTime() + 10 * 60000)
   const i = Math.floor(Math.random() * photos.length);
   $widget.setTimeline({
+    entries: [
+      { date },
+    ],
+    policy: { afterDate },
     render: (ctx) => {
       return {
         type: 'image',
         props: {
           image: $image(photos[i]),
+          widgetURL:
+            `jsbox://run?name=${$addin.current.name}&album=${album}`,
           frame: {
             maxWidth: Infinity,
             maxHeight: Infinity,
