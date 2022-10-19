@@ -77,7 +77,7 @@ exports.init = () => {
           name,
           value: name,
         });
-        
+
         const item = {
           name,
           photos: [],
@@ -101,7 +101,7 @@ exports.init = () => {
 
   $ui.render({
     props: {
-      title: 'Albums',
+      title: $l10n('Albums'),
       navButtons: [
         {
           symbol: 'rectangle.stack.badge.plus',
@@ -109,7 +109,7 @@ exports.init = () => {
             asPrimary: true,
             items: [
               {
-                title: 'New Album',
+                title: $l10n('New Album'),
                 symbol: 'rectangle.stack.badge.plus',
                 handler: createAlbumHandler,
               },
@@ -131,19 +131,33 @@ exports.init = () => {
           menu: {
             items: [
               {
-                title: 'Copy Name',
+                title: $l10n('Copy Album Name'),
                 symbol: 'doc.on.doc',
-                handler: (sender, indexPath) => {
-                  $clipboard.text = albums[indexPath.row].name;
+                handler: (sender, indexPath, data) => {
+                  $clipboard.text = data.name.text;
                   $ui.toast('Copied');
                 },
               },
               {
-                title: 'Delete Album',
+                title: $l10n('Copy URL Scheme'),
+                symbol: 'link',
+                handler: (sender, indexPath, data) => {
+                  const album = data.name.text
+                  $clipboard.copy({
+                    text: `jsbox://run?name=${encodeURIComponent(
+                      $addin.current.name
+                    )}&album=${encodeURIComponent(
+                      album
+                    )}`
+                  })
+                }
+              },
+              {
+                title: $l10n('Delete Album'),
                 symbol: 'trash',
                 destructive: true,
-                handler: (sender, indexPath) => {
-                  const name = albums[indexPath.row].name;
+                handler: (sender, indexPath, data) => {
+                  const name = data.name.text;
                   $file.delete(`albums/${name}/`);
                   removeWidgetOption(name)
                   albums.splice(indexPath.row, 1);
@@ -158,10 +172,10 @@ exports.init = () => {
           make.left.right.inset(10);
         },
         events: {
-          didSelect: (sender, indexPath) => {
+          didSelect: (sender, indexPath, data) => {
             $ui.push(
               Photos({
-                album: albums[indexPath.row].name,
+                album: data.name.text,
               })
             );
           },

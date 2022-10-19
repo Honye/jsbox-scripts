@@ -5,42 +5,45 @@ const columns = 3;
 const spacing = 4;
 const itemWidth = (screen.width - spacing * (columns - 1)) / 3;
 
-const choosePhotos = ({ album }) => {
-  $photo.pick({
-    mediaTypes: $mediaType.image,
-    quality: $imgPicker.quality.medium,
-    multi: true,
-    selectionLimit: 9,
-    handler: ({ status, results }) => {
-      if (!status) return;
-
-      for (const { image, filename } of results) {
-        const path = `albums/${album}/${filename}.jpg`;
-        $file.write({
-          data: image.jpg(0.8),
-          path,
-        });
-        $('matrix').insert({
-          indexPath: $indexPath(0, 0),
-          value: {
-            image: {
-              src: path,
-            },
-          },
-        });
-        $('albums').data = mapAlbumsData(readAlbums())
-      }
-    },
-  });
-};
-
 /**
  * @param {object} params
  * @param {string} params.album 相册名
  * @param {string} [params.filename] 图片文件名
  */
 exports.Photos = ({ album, filename }) => {
-  const photos = readPhotos(album)
+  const photos = readPhotos(album);
+
+  const choosePhotos = ({ album }) => {
+    $photo.pick({
+      mediaTypes: $mediaType.image,
+      quality: $imgPicker.quality.medium,
+      multi: true,
+      selectionLimit: 9,
+      handler: ({ status, results }) => {
+        if (!status) return;
+
+        for (const { image, filename } of results) {
+          const path = `albums/${album}/${filename}.jpg`;
+          $file.write({
+            data: image.jpg(0.8),
+            path,
+          });
+          $('matrix').insert({
+            indexPath: $indexPath(0, 0),
+            value: {
+              image: {
+                src: path,
+              },
+            },
+          });
+          photos.unshift(path);
+          $('albums').data = mapAlbumsData(
+            readAlbums()
+          );
+        }
+      },
+    });
+  };
 
   return {
     props: {
@@ -85,7 +88,27 @@ exports.Photos = ({ album, filename }) => {
           menu: {
             items: [
               {
-                title: 'Delete',
+                title: $l10n('Copy URL Scheme'),
+                symbol: 'link',
+                handler: (sender, indexPath) => {
+                  const filePath =
+                    photos[indexPath.row];
+                  const filename = filePath.match(
+                    /[^\\/:*?"<>|\r\n]+$/
+                  )[0];
+                  $clipboard.copy({
+                    text: `jsbox://run?name=${encodeURIComponent(
+                      $addin.current.name
+                    )}&album=${encodeURIComponent(
+                      album
+                    )}&filename=${encodeURIComponent(
+                      filename
+                    )}`,
+                  });
+                },
+              },
+              {
+                title: $l10n('Delete'),
                 symbol: 'trash',
                 destructive: true,
                 handler: (sender, indexPath) => {

@@ -36,7 +36,7 @@ exports.render = (photos) => {
         props: {
           image: $image(photos[i]),
           widgetURL:
-            `jsbox://run?name=${$addin.current.name}&album=${album}`,
+            `jsbox://run?name=${$addin.current.name}&album=${encodeURIComponent(album)}`,
           frame: {
             maxWidth: Infinity,
             maxHeight: Infinity,

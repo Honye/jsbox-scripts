@@ -1,3 +1,9 @@
 "OK" = "好的";
 "DONE" = "完成";
 "HELLO_WORLD" = "你好，世界！";
+"Delete" = "删除";
+"Albums" = "相册";
+"New Album" = "新建相册";
+"Copy Album Name" = "复制相册名";
+"Delete Album" = "删除相册";
+"Copy URL Scheme" = "复制 URL Scheme";
